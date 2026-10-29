@@ -9,13 +9,14 @@ Leave a field out (or null) when it is unknown: the section is then hidden
 or shows a neutral placeholder. Never invent prices, reviews or claims.
 See tools/demo_example.json for every field.
 
-Design (tools/designs.py): the generator picks the least-used layout, font pair,
-shape and colour palette among the demos and client sites already in the repo,
-so no two shops look the same. The shop's own brand colour ("colors": {"accent"})
-and light/dark "theme" are kept. To force a choice, add for example
-  "design": {"layout": "poster", "fonts": "changa", "shape": "sharp", "palette": "carbon-lime"}
-Layouts: classic poster split editorial sport. Fonts: lalezar changa reem messiri
-alexandria kufi. Shapes: round soft sharp. Palettes: see PALETTES in designs.py.
+Design: there are 7 completely different website designs: classic (built here
+from base.css) and showroom, garage, clean, magazine, blocks, local (tools/templates.py),
+each with its own structure and sections, plus 6 font pairs, 3 corner shapes and
+9 palettes (tools/designs.py). The generator picks the least-used design, fonts, shape
+and palette among the demos and client sites already in the repo, so no two shops look
+the same. The shop's own brand colour ("colors": {"accent"}) and "theme" are kept.
+To force a choice: "design": {"layout": "garage", "fonts": "changa", "shape": "sharp",
+"palette": "carbon-lime"}.
 Re-running for a slug that already exists keeps that shop's design.
 """
 import json, sys, html, os, re
@@ -24,6 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 import designs as D  # noqa: E402
+import templates as T  # noqa: E402
 
 ICONS = {
     "shield": '<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/>',
@@ -35,9 +37,7 @@ ICONS = {
     "wrench": '<path d="M14 6a4 4 0 0 0 5 5l-8 8a2 2 0 0 1-3-3l8-8a4 4 0 0 1-2-2z"/>',
     "sparkle": '<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>',
 }
-AR_NUM = "٠١٢٣٤٥٦٧٨٩"
 e = lambda s: html.escape(str(s), quote=True)
-arnum = lambda n: "".join(AR_NUM[int(ch)] for ch in f"{n:02d}")
 
 
 def build(d, design):
@@ -48,7 +48,6 @@ def build(d, design):
     L = design["layout"]
     F = D.FONTS[design["fonts"]]
     S = D.SHAPES[design["shape"]]
-    W = D.WORDS[L]
     c = D.colors(design, d.get("colors"))
     dark = c["dark"]
 
@@ -66,7 +65,35 @@ def build(d, design):
     services = d["services"]
     svc_names = [s["title"] for s in services]
     latin = bool(d.get("latin_name"))
+    design_meta = ";".join(f"{k}={v}" for k, v in design.items())
+    fonts_url = f"https://fonts.googleapis.com/css2?{F['css']}&family=Montserrat:wght@500;700&display=swap"
+    lat, lng = d.get("lat"), d.get("lng")
+    q = f"{lat},{lng}" if lat and lng else e(d.get("maps_query") or (name + " " + city))
 
+    if L != "classic":
+        packs = d.get("packs") or [
+            {"name": "باقة الأساس", "items": svc_names[:2] or ["خدمتكم هنا"]},
+            {"name": "الباقة المميزة", "items": svc_names[:3], "pick": True},
+            {"name": "الباقة الكاملة", "items": svc_names[:4]},
+        ]
+        ctx = dict(
+            name=e(name), sub=e(sub), latin=latin, city=e(city), area=e(area), loc=e(loc), addr=e(d.get("address") or loc),
+            phone=phone, pdisp=e(pdisp), rating=e(rating) if rating else "", reviews=e(reviews) if reviews else "", rline=e(rline),
+            services=[dict(title=e(s["title"]), text=e(s.get("text") or ""), icon=ICONS.get(s.get("icon", "sparkle"), ICONS["sparkle"])) for s in services],
+            packs=[dict(name=e(p["name"]), items=[e(i) for i in p.get("items", [])], price=e(p["price"]) if p.get("price") else "", pick=p.get("pick")) for p in packs],
+            review=e(d.get("review") or ""), hours=[e(h) for h in (d.get("hours") or [])], hours_short=e(d.get("hours_short") or ""),
+            q=q, slogan=e(d.get("slogan") or ""), headline=e(d.get("headline") or ""),
+            intro=e(d.get("intro") or f"{'، '.join(svc_names[:4])} في {loc}. أرسل نوع سيارتك والخدمة اللي تبيها، ويرد عليك فريقنا بأسرع وقت."),
+            c=c, F=F, S=S, words=dict(dock=D.DOCK[L]), badge=not d.get("client"),
+            options="".join(f"<option>{e(n)}</option>" for n in svc_names),
+            title=f"{e(name)} | {e('، '.join(svc_names[:3]))} في {e(city)}" + ("" if d.get("client") else " (نموذج تجريبي)"),
+            head_extra=("" if d.get("client") else '<meta name="robots" content="noindex, nofollow">\n')
+            + f'<meta name="design" content="{design_meta}">\n<link rel="preconnect" href="https://fonts.googleapis.com">\n'
+              f'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="{fonts_url}" rel="stylesheet">',
+        )
+        return T.TEMPLATES[L](ctx)
+
+    W = D.WORDS["classic"]
     css = open(os.path.join(HERE, "base.css"), encoding="utf-8").read()
     theme = f"""
 :root{{--pearl:{c['bg']};--pearl-2:{c['surface2']};--ink:{c['text']};--ink-2:{c['text2']};--candy:{c['accent']};
@@ -105,21 +132,17 @@ select,input[type=text]{{border-radius:var(--field)}}.out{{border-radius:var(--f
 """
     if dark:
         theme += "body{background:radial-gradient(90% 50% at 50% -10%," + c["surface2"] + " 0%,var(--pearl) 60%) fixed,var(--pearl)}\n"
-    theme += D.layout_css(L, c)
 
     # ---------- pieces ----------
     sec_no = [0]
 
     def head(title, sub=""):
         sec_no[0] += 1
-        no = f'<span class="no">{arnum(sec_no[0])}</span>' if L == "editorial" else ""
-        return f'<div class="sec-head">{no}<h2>{e(title)}</h2>{"<p>"+e(sub)+"</p>" if sub else ""}</div>'
+        return f'<div class="sec-head"><h2>{e(title)}</h2>{"<p>"+e(sub)+"</p>" if sub else ""}</div>'
 
     def svc_item(i, s):
         icon = ICONS.get(s.get("icon", "sparkle"), ICONS["sparkle"])
         txt = "<p>" + e(s["text"]) + "</p>" if s.get("text") else ""
-        if L == "poster":
-            return f'<div class="service"><span class="num">{arnum(i + 1)}</span><div><b>{e(s["title"])}</b>{txt}</div></div>'
         return (f'<div class="service"><div class="glyph"><svg viewBox="0 0 24 24">{icon}</svg></div>'
                 f'<b>{e(s["title"])}</b>{txt}</div>')
 
@@ -135,9 +158,7 @@ select,input[type=text]{{border-radius:var(--field)}}.out{{border-radius:var(--f
         pick = p.get("pick")
         price = e(p["price"]) if p.get("price") else "سعر باقتكم هنا"
         pk += (f'<div class="pack{" pick" if pick else ""}">{"<span class=badge>الأكثر طلبًا</span>" if pick else ""}'
-               + (f'<h3>{e(p["name"])}</h3><ul>{"".join("<li>"+e(i)+"</li>" for i in p["items"])}</ul><div class="price" style="font-size:1.3rem">{price}</div>'
-                  if L == "split" else
-                  f'<h3>{e(p["name"])}</h3><div class="price" style="font-size:1.3rem">{price}</div><ul>{"".join("<li>"+e(i)+"</li>" for i in p["items"])}</ul>')
+               + (f'<h3>{e(p["name"])}</h3><div class="price" style="font-size:1.3rem">{price}</div><ul>{"".join("<li>"+e(i)+"</li>" for i in p["items"])}</ul>')
                + f'<a class="btn {"btn-primary" if pick else "btn-ghost"}" href="#book">اختر الباقة</a></div>')
 
     compare = """<div class="compare" id="cmp" aria-label="مقارنة قبل وبعد">
@@ -152,8 +173,6 @@ select,input[type=text]{{border-radius:var(--field)}}.out{{border-radius:var(--f
     review = d.get("review")
     hours = d.get("hours") or []
     hours_html = "<br>".join(e(h) for h in hours)
-    lat, lng = d.get("lat"), d.get("lng")
-    q = f"{lat},{lng}" if lat and lng else e(d.get("maps_query") or (name + " " + city))
     addr = d.get("address") or loc
     facts = ""
     if hours_html:
@@ -163,19 +182,10 @@ select,input[type=text]{{border-radius:var(--field)}}.out{{border-radius:var(--f
     options = "".join(f"<option>{e(n)}</option>" for n in svc_names)
 
     sections = {}
-    if L == "poster" and (rating or reviews or area):
-        st = ""
-        if rating:
-            st += f'<div class="stat"><b>⭐ {e(rating)}</b><span>تقييم خرائط قوقل</span></div>'
-        if reviews:
-            st += f'<div class="stat"><b>{e(reviews)}</b><span>تقييم من العملاء</span></div>'
-        st += f'<div class="stat"><b>{len(services)}</b><span>خدمات للعناية بسيارتك</span></div>'
-        st += f'<div class="stat"><b style="font-size:1.15rem">{e(area or city)}</b><span>{e(city if area else "موقعنا")}</span></div>'
-        sections["stats"] = f'<section class="stats" aria-label="أرقام المركز">{st}</section>'
     sections["services"] = f'<section id="services">{head(*W["services"])}<div class="services">{svc_html}</div></section>'
     sections["packs"] = (f'<section id="packs">{head(*W["packs"])}<div class="packs">{pk}</div>'
                          f'<p class="note">أسماء الباقات ومحتوياتها وأسعارها أمثلة تُستبدل بباقاتكم الفعلية.</p></section>')
-    work_inner = (compare + '<div style="height:16px"></div>' if L != "classic" and L != "split" else "") + frames
+    work_inner = frames
     sections["work"] = f'<section id="work">{head(*W["work"])}{work_inner}</section>'
     if review or rline:
         sections["reviews"] = (f'<section id="reviews">{head(W["reviews"], rline + "." if rline else "")}'
@@ -195,36 +205,18 @@ select,input[type=text]{{border-radius:var(--field)}}.out{{border-radius:var(--f
     # ---------- hero per layout ----------
     badge = '<p class="demo-badge">نموذج تجريبي</p>'
     eyebrow = f'<span class="eyebrow">{e(d["slogan"])}</span>' if d.get("slogan") else ""
-    default_h1 = {"classic": f"عناية احترافية بسيارتك في {city}", "poster": name, "split": f"سيارتك تستاهل عناية {name}",
-                  "editorial": f"عناية بالتفاصيل في {city}", "sport": f"حماية ولمعة تدوم في {city}"}[L]
-    h1 = e(d.get("headline") if d.get("headline") and L != "poster" else default_h1)
+    default_h1 = f"عناية احترافية بسيارتك في {city}"
+    h1 = e(d.get("headline") or default_h1)
     intro = e(d.get("intro") or f"{'، '.join(svc_names[:4])} في {loc}. أرسل نوع سيارتك والخدمة اللي تبيها، ويرد عليك فريقنا بأسرع وقت.")
     rl = f'<p style="font-weight:700">{rline}</p>' if rline else ""
     ctas = f'<div class="cta-row"><a class="btn btn-primary" href="#book">{e(W["cta"])}</a><a class="btn btn-ghost" href="#{"packs" if "باق" in W["cta2"] or "أسعار" in W["cta2"] else "services"}">{e(W["cta2"])}</a></div>'
-    chips = '<div class="chips">' + "".join(f"<span>{e(n)}</span>" for n in svc_names[:4]) + "</div>"
 
-    if L == "poster":
-        sub_h = '<p style="font-weight:600">' + e(d["headline"]) + "</p>" if d.get("headline") else ""
-        chip = f'<span class="chip">⭐ {e(rating)} على خرائط قوقل</span>' if rating else ""
-        hero = (f'<div class="hero">{badge}<div class="poster">{eyebrow}<h1>{h1}</h1>'
-                f'{sub_h}{chip}<p>{intro}</p>{ctas}</div></div>')
-    elif L == "split":
-        hero = (f'<div class="hero"><div class="hero-copy">{badge}{eyebrow}<h1>{h1}</h1>{rl}<p>{intro}</p>{chips}{ctas}</div>'
-                f'<div>{compare}</div></div>')
-    elif L == "editorial":
-        hero = f'<div class="hero"><div class="hero-copy">{badge}{eyebrow}<h1>{h1}</h1>{rl}<p>{intro}</p>{ctas}</div></div>'
-    elif L == "sport":
-        hero = f'<div class="hero"><div class="hero-copy">{badge}{eyebrow}<h1>{h1}</h1>{chips}{rl}<p>{intro}</p>{ctas}</div><div>{compare}</div></div>'
-    else:
-        hero = f'<div class="hero"><div class="hero-copy">{badge}{eyebrow}<h1>{h1}</h1>{rl}<p>{intro}</p>{ctas}</div><div>{compare}</div></div>'
+    hero = f'<div class="hero"><div class="hero-copy">{badge}{eyebrow}<h1>{h1}</h1>{rl}<p>{intro}</p>{ctas}</div><div>{compare}</div></div>'
 
-    body = hero + "".join(sections[k] for k in D.ORDER[L] if k in sections)
+    body = hero + "".join(sections[k] for k in ["services", "packs", "work", "reviews", "map", "book"] if k in sections)
 
     title = f"{e(name)} | {e('، '.join(svc_names[:3]))} في {e(city)} (نموذج تجريبي)"
     foot_bits = " • ".join(x for x in [e(addr), e(d.get("hours_short") or ""), e(pdisp)] if x)
-    design_meta = ";".join(f"{k}={v}" for k, v in design.items())
-    fonts_url = f"https://fonts.googleapis.com/css2?{F['css']}&family=Montserrat:wght@500;700&display=swap"
-
     return f"""<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
