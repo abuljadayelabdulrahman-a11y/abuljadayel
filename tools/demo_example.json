@@ -12,18 +12,39 @@
   "phone": "+966540378463",
   "rating": 4.9,
   "reviews": 97,
-  "hours": ["السبت – الخميس: ٢:٠٠ م – ١٠:٠٠ م", "الجمعة: مغلق"],
+  "hours": [
+    "السبت – الخميس: ٢:٠٠ م – ١٠:٠٠ م",
+    "الجمعة: مغلق"
+  ],
   "hours_short": "السبت – الخميس ٢ م – ١٠ م",
   "lat": 21.3764851,
   "lng": 39.7885069,
   "theme": "dark",
-  "colors": {"accent": "#cfae6b"},
+  "colors": {
+    "accent": "#cfae6b"
+  },
   "services": [
-    {"title": "حماية الطلاء PPF", "text": "فيلم شفاف يحمي الطلاء من الحصى والخدوش وآثار الطريق.", "icon": "shield"},
-    {"title": "نانو سيراميك", "text": "طبقة لامعة تطرد الماء والأوساخ وتسهّل غسيل السيارة.", "icon": "drop"},
-    {"title": "عازل حراري", "text": "تظليل يخفف حرارة الشمس داخل السيارة ويحجب الأشعة الضارة.", "icon": "sun"},
-    {"title": "تلميع وعناية تفصيلية", "text": "تلميع يزيل الخدوش الدوّامية، وعناية داخلية وخارجية ترجّع لمعة الطلاء.", "icon": "polish"}
+    {
+      "title": "حماية الطلاء PPF",
+      "text": "فيلم شفاف يحمي الطلاء من الحصى والخدوش وآثار الطريق.",
+      "icon": "shield"
+    },
+    {
+      "title": "نانو سيراميك",
+      "text": "طبقة لامعة تطرد الماء والأوساخ وتسهّل غسيل السيارة.",
+      "icon": "drop"
+    },
+    {
+      "title": "عازل حراري",
+      "text": "تظليل يخفف حرارة الشمس داخل السيارة ويحجب الأشعة الضارة.",
+      "icon": "sun"
+    },
+    {
+      "title": "تلميع وعناية تفصيلية",
+      "text": "تلميع يزيل الخدوش الدوّامية، وعناية داخلية وخارجية ترجّع لمعة الطلاء.",
+      "icon": "polish"
+    }
   ],
   "review": "ماشاءالله سويت عندهم تلميع فقط بدون نانو والسياره رجعت اطلق من الوكاله و المسؤولين و طاقم العمل احترافيين و خلوقيين جدا و سعرهم ممتاز جدا 👍🏻",
-  "_notes": "theme: dark or light. colors (optional): bg, surface, surface2, text, text2, line, accent, accent_text, paint. icons: shield drop sun polish wash seat wrench sparkle. packs (optional): [{name, items[], pick, price}] - only real prices. Omit unknown fields."
+  "_notes": "theme: dark or light. colors (optional): bg, surface, surface2, text, text2, line, accent, accent_text, paint. icons: shield drop sun polish wash seat wrench sparkle. packs (optional): [{name, items[], pick, price}] - only real prices. Omit unknown fields. design (optional, normally left out): the generator gives every shop its own layout, fonts, corner shape and palette, picking the least-used ones among existing demos; force with \"design\": {\"layout\": \"classic|poster|split|editorial|sport\", \"fonts\": \"lalezar|changa|reem|messiri|alexandria|kufi\", \"shape\": \"round|soft|sharp\", \"palette\": \"see tools/designs.py\"}. The shop brand colour in colors.accent and the theme are kept."
 }
