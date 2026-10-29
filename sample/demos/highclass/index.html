@@ -201,20 +201,20 @@ footer{padding-block:36px 24px;color:var(--ink-2);font-size:.92rem;border-top:1p
       <div class="packs">
         <div class="pack">
           <h3>باقة الأساس</h3>
-          <div class="price">[سعركم] ريال</div>
+          <div class="price" style="font-size:1.3rem">سعر باقتكم هنا</div>
           <ul><li>تلميع خارجي</li><li>نانو سيراميك للطلاء</li><li>غسيل تفصيلي</li></ul>
           <a class="btn btn-ghost" href="#book">اختر الباقة</a>
         </div>
         <div class="pack pick">
           <span class="badge">الأكثر طلبًا</span>
           <h3>باقة الحماية</h3>
-          <div class="price">[سعركم] ريال</div>
+          <div class="price" style="font-size:1.3rem">سعر باقتكم هنا</div>
           <ul><li>حماية الواجهة الأمامية PPF</li><li>نانو سيراميك</li><li>عازل حراري</li></ul>
           <a class="btn btn-primary" href="#book">اختر الباقة</a>
         </div>
         <div class="pack">
           <h3>باقة كاملة</h3>
-          <div class="price">[سعركم] ريال</div>
+          <div class="price" style="font-size:1.3rem">سعر باقتكم هنا</div>
           <ul><li>حماية كامل السيارة PPF</li><li>عازل حراري كامل</li><li>تلميع ونانو سيراميك</li></ul>
           <a class="btn btn-ghost" href="#book">اختر الباقة</a>
         </div>
@@ -233,6 +233,14 @@ footer{padding-block:36px 24px;color:var(--ink-2);font-size:.92rem;border-top:1p
       </div>
     </section>
 
+    <section id="map">
+      <div class="sec-head">
+        <h2>موقعنا</h2>
+        <p>هاي كلاس لعناية السيارات، جدة. اضغط على الخريطة للاتجاهات.</p>
+      </div>
+      <iframe title="موقع هاي كلاس على الخريطة" src="https://maps.google.com/maps?q=21.5939927,39.1461934&z=15&output=embed" style="width:100%;height:260px;border:0;border-radius:16px" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <p style="margin-top:10px"><a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&query=21.5939927,39.1461934" target="_blank" rel="noopener">افتح في خرائط قوقل</a></p>
+    </section>
     <section id="book" class="book">
       <div class="sec-head">
         <h2>احجز موعدك</h2>
@@ -254,7 +262,7 @@ footer{padding-block:36px 24px;color:var(--ink-2);font-size:.92rem;border-top:1p
         <div class="out" id="out" role="status">
           <span id="msg"></span>
           <button class="btn btn-ghost" type="button" id="copy">انسخ الرسالة</button>
-          <span style="font-size:.85rem;color:var(--ink-2)">في موقعكم الفعلي يفتح هذا الزر محادثة واتساب مع رقمكم مباشرة.</span>
+          <span style="font-size:.85rem;color:var(--ink-2)">الزر يفتح محادثة واتساب مع رقمكم مباشرة والرسالة جاهزة.</span>
         </div>
       </form>
     </section>
@@ -267,7 +275,7 @@ footer{padding-block:36px 24px;color:var(--ink-2);font-size:.92rem;border-top:1p
 </div>
 
 <nav class="dock" aria-label="تواصل سريع">
-  <a class="btn btn-primary" href="#book">احجز بالواتساب</a>
+  <a class="btn btn-primary" href="https://wa.me/966533696939" target="_blank" rel="noopener">احجز بالواتساب</a>
   <a class="btn btn-ghost" href="tel:+966533696939">اتصل بنا</a>
 </nav>
 
@@ -288,6 +296,7 @@ footer{padding-block:36px 24px;color:var(--ink-2);font-size:.92rem;border-top:1p
     var svc=document.getElementById('svc').value,car=document.getElementById('car').value.trim(),nm=document.getElementById('nm').value.trim();
     var text='السلام عليكم، أبغى أحجز موعد لخدمة '+svc+(car?' لسيارة '+car:'')+(nm?'. الاسم: '+nm:'')+'.';
     msg.textContent=text;out.classList.add('show');
+    window.open('https://wa.me/966533696939?text='+encodeURIComponent(text),'_blank');
   });
   document.getElementById('copy').addEventListener('click',function(){
     var t=msg.textContent,b=this;
