@@ -49,17 +49,17 @@
   const T = {
     ask, json, OFFER, GUIDE, prompts: P,
     researcher: (raw) => json('thinker', P.researcher, raw, 700),
-    scorer: (facts) => json('fast', P.scorer, JSON.stringify(facts), 200),
+    scorer: (facts) => json('fast', P.scorer, JSON.stringify(facts), 800),
     writer: async (facts, region = '') => (await ask('writer', P.writer + GUIDE + '\n' + OFFER, 'FACTS: ' + JSON.stringify(facts) + (region ? '\nREGION: ' + region : ''), 400)).text,
     followup: async (lead) => (await ask('writer', P.followup + GUIDE, 'LEAD: ' + JSON.stringify(lead), 250)).text,
     critic: (draft, factsOrCustomerMsg) => json('thinker', P.critic + GUIDE + '\n' + OFFER, 'FACTS OR CUSTOMER MESSAGE: ' + (typeof factsOrCustomerMsg === 'string' ? factsOrCustomerMsg : JSON.stringify(factsOrCustomerMsg)) + '\nDRAFT:\n' + draft, 600),
-    sorter: (msg, history = '') => json('thinker', P.sorter, (history ? 'CHAT SO FAR:\n' + history + '\n' : '') + 'NEW MESSAGE:\n' + msg, 200),
+    sorter: (msg, history = '') => json('thinker', P.sorter, (history ? 'CHAT SO FAR:\n' + history + '\n' : '') + 'NEW MESSAGE:\n' + msg, 800),
     closer: (msg, history = '', crmNotes = '') => json('thinker', P.closer + GUIDE + '\n' + OFFER, 'CRM NOTES: ' + crmNotes + '\nCHAT SO FAR:\n' + history + '\nCUSTOMER NOW:\n' + msg, 500),
     leadHunter: (rawResults) => json('fast', P.leadHunter, rawResults.slice(0, 12000), 1500),
     demoMaker: (facts) => json('thinker', P.demoMaker, typeof facts === 'string' ? facts.slice(0, 12000) : JSON.stringify(facts), 1500),
     siteBuilder: (content) => json('thinker', P.siteBuilder, content.slice(0, 15000), 2000),
     saudiEar: (msg) => json('writer', P.saudiEar + GUIDE, msg, 400),
-    reporter: (facts) => json('fast', P.reporter, JSON.stringify(facts), 500),
+    reporter: (facts) => json('fast', P.reporter, JSON.stringify(facts), 900),
     // Full reply pipeline: Sorter > Closer > Critic > Saudi ear. Returns everything; read only .final, .intent and the flags.
     reply: async (msg, history = '', crmNotes = '') => {
       const s = await T.sorter(msg, history);
