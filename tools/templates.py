@@ -86,11 +86,14 @@ def _page(ctx, css, body, layout):
 
 
 def _demo(ctx):
-    return '<span class="demo">نموذج تجريبي</span>' if ctx["badge"] else ""
+    return '<span class="demo">تصميم مقترح للعرض (نموذج تجريبي)</span>' if ctx["badge"] else ""
 
 
-def _note():
-    return '<p class="fine">نموذج مصمم ليوضح شكل موقعكم. الأسعار والصور تُستبدل ببياناتكم.</p>'
+def _note(ctx):
+    if not ctx["badge"]:
+        return ""
+    return ('<p class="fine">هذا تصميم مقترح للعرض فقط، وليس الموقع الرسمي لـ' + ctx["name"]
+            + '. الصور والأسعار تُستبدل ببياناتكم الحقيقية.</p>')
 
 
 def _map(ctx):
@@ -103,7 +106,7 @@ def _dir(ctx):
 
 
 def _price(p):
-    return p["price"] if p.get("price") else "سعر الباقة هنا"
+    return p["price"] if p.get("price") else "السعر حسب نوع السيارة"
 
 
 def _form(ctx, cls="", radio=False):
@@ -177,7 +180,7 @@ footer{{padding-block:36px;color:var(--tx2);font-size:.9rem;border-top:1px solid
 {quote}
 <section class="in" id="visit"><p class="kicker">الزيارة</p><h2>نستقبلك في {ctx['loc']}</h2><div class="info">{info}</div>{_map(ctx)}</section>
 <section class="in book" id="book"><div><p class="kicker">الحجز</p><h2>احجز موعدك</h2><p style="color:var(--tx2)">اختر الخدمة واكتب نوع سيارتك، وتنفتح لك رسالة جاهزة في واتساب.</p></div>{_form(ctx)}</section>
-<footer class="in"><b>{ctx['name']}</b><span>{ctx['addr']}</span>{_note()}</footer>"""
+<footer class="in"><b>{ctx['name']}</b><span>{ctx['addr']}</span>{_note(ctx)}</footer>"""
     return _page(ctx, css, body, "showroom")
 
 
@@ -230,7 +233,7 @@ footer{background:#111;color:#cfcfcf;padding-block:28px;font-size:.9rem;display:
 <section class="in"><h2>الباقات</h2><div class="tickets">{tickets}</div><p style="color:var(--tx2);font-size:.9rem;margin-top:14px">أسماء الباقات وأسعارها أمثلة تُستبدل بباقاتكم الفعلية.</p></section>
 <section class="in"><h2>من الورشة</h2><div class="film"><div>صورة من أعمالكم</div><div>صورة من أعمالكم</div><div>صورة من أعمالكم</div><div>صورة من أعمالكم</div></div></section>
 <section class="in two" id="book"><div><h2>احجز موعدك</h2>{_form(ctx)}</div><div><h2>الموقع</h2><p style="margin-bottom:12px">{ctx['addr']}</p>{_map(ctx)}</div></section>
-<div class="stripe"></div><footer class="in"><b>{ctx['name']}</b><span>{ctx['addr']}</span>{_note()}</footer>"""
+<div class="stripe"></div><footer class="in"><b>{ctx['name']}</b><span>{ctx['addr']}</span>{_note(ctx)}</footer>"""
     return _page(ctx, css, body, "garage")
 
 
@@ -282,7 +285,7 @@ footer{text-align:center;color:var(--tx2);font-size:.85rem;padding:24px 0;displa
 <div class="panel" data-panel>{svc}</div><div class="panel" data-panel>{pk}<p class="small">أسماء الباقات وأسعارها أمثلة تُستبدل بباقاتكم الفعلية.</p></div><div class="panel" data-panel>{loc}</div>
 {rev}
 <h2 id="book">الحجز</h2>{_form(ctx, radio=True)}
-<footer><b>{ctx['name']}</b>{_note()}</footer></div>"""
+<footer><b>{ctx['name']}</b>{_note(ctx)}</footer></div>"""
     return _page(ctx, css, body, "clean")
 
 
@@ -326,7 +329,7 @@ footer{border-top:3px double var(--tx);padding-block:24px;text-align:center;colo
            + (f'<details><summary>متى تفتحون؟</summary><p>{_hours(ctx)}</p></details>' if ctx["hours"] else "")
            + f'<details><summary>وش الخدمات اللي تقدمونها؟</summary><p>{"، ".join(names)}.</p></details>')
     first = ctx["intro"][:1]
-    story = (f'<p class="{"drop" if "\u0600" <= first <= "\u06ff" else ""}">{ctx["intro"]}</p>'
+    story = (f'<p class="{"drop" if first in "اأإآدذرزوؤءة" else ""}">{ctx["intro"]}</p>'
              + (f'<p style="margin-top:12px">تقييم {ctx["name"]} على خرائط قوقل {ctx["rating"]} من {ctx["reviews"]} تقييم، وتلقاه في {ctx["loc"]}.</p>' if ctx["rline"] else f'<p style="margin-top:12px">تلقانا في {ctx["loc"]}.</p>'))
     pull = f'<p class="pull">«{ctx["review"]}»<small>من زائر على خرائط قوقل</small></p>' if ctx["review"] else ""
     body = f"""<header class="mast in"><div class="rule"><span>{ctx['city']}</span><span>{_demo(ctx) or 'عناية بالسيارات'}</span><span class="lat">{ctx['pdisp']}</span></div>
@@ -336,7 +339,7 @@ footer{border-top:3px double var(--tx);padding-block:24px;text-align:center;colo
 <section class="in"><h2>الباقات</h2><div class="plist">{plist}</div><p style="color:var(--tx2);font-size:.88rem;margin-top:12px">أسماء الباقات وأسعارها أمثلة تُستبدل بباقاتكم الفعلية.</p></section>
 <section class="in"><h2>أسئلة تتكرر</h2>{faq}</section>
 <section class="in two" id="book"><div><h2>طلب موعد</h2>{_form(ctx)}</div><div><h2>العنوان</h2>{_map(ctx)}</div></section>
-<footer class="in"><b>{ctx['name']}</b><span>{ctx['addr']}</span>{_note()}</footer>"""
+<footer class="in"><b>{ctx['name']}</b><span>{ctx['addr']}</span>{_note(ctx)}</footer>"""
     return _page(ctx, css, body, "magazine")
 
 
@@ -397,7 +400,7 @@ footer{padding-block:26px;font-size:.9rem;display:grid;gap:6px}
 <div class="blk"><div class="in"><h2>الشغل</h2><div class="mosaic"><div>صورة من أعمالكم</div><div>صورة</div><div>صورة</div><div>صورة</div><div>صورة</div></div></div></div>
 {rev}
 <div class="blk b-ac" id="book"><div class="in two"><div><h2>احجز موعدك</h2><p style="margin-bottom:16px">{ctx['addr']}</p>{_map(ctx)}</div>{_form(ctx)}</div></div>
-<footer class="in"><b>{ctx['name']}</b>{_note()}</footer>"""
+<footer class="in"><b>{ctx['name']}</b>{_note(ctx)}</footer>"""
     return _page(ctx, css, body, "blocks")
 
 
@@ -451,7 +454,7 @@ footer{padding-block:24px;color:var(--tx2);font-size:.88rem;display:grid;gap:4px
 {hrs}{rev}
 <section class="in wrapc"><h2>الباقات</h2>{pk}<p style="color:var(--tx2);font-size:.88rem;margin-top:10px">أسماء الباقات وأسعارها أمثلة تُستبدل بباقاتكم الفعلية.</p></section>
 <section class="in wrapc" id="book"><h2>احجز موعد</h2>{_form(ctx, radio=True)}</section>
-<footer class="in wrapc"><b>{ctx['name']}</b><span class="lat">{ctx['pdisp']}</span>{_note()}</footer>"""
+<footer class="in wrapc"><b>{ctx['name']}</b><span class="lat">{ctx['pdisp']}</span>{_note(ctx)}</footer>"""
     return _page(ctx, css, body, "local")
 
 

@@ -156,7 +156,7 @@ select,input[type=text]{{border-radius:var(--field)}}.out{{border-radius:var(--f
     pk = ""
     for p in packs:
         pick = p.get("pick")
-        price = e(p["price"]) if p.get("price") else "سعر باقتكم هنا"
+        price = e(p["price"]) if p.get("price") else "السعر حسب نوع السيارة"
         pk += (f'<div class="pack{" pick" if pick else ""}">{"<span class=badge>الأكثر طلبًا</span>" if pick else ""}'
                + (f'<h3>{e(p["name"])}</h3><div class="price" style="font-size:1.3rem">{price}</div><ul>{"".join("<li>"+e(i)+"</li>" for i in p["items"])}</ul>')
                + f'<a class="btn {"btn-primary" if pick else "btn-ghost"}" href="#book">اختر الباقة</a></div>')
@@ -203,7 +203,7 @@ select,input[type=text]{{border-radius:var(--field)}}.out{{border-radius:var(--f
                         f'</form></section>')
 
     # ---------- hero per layout ----------
-    badge = '<p class="demo-badge">نموذج تجريبي</p>'
+    badge = '<p class="demo-badge">تصميم مقترح للعرض (نموذج تجريبي)</p>'
     eyebrow = f'<span class="eyebrow">{e(d["slogan"])}</span>' if d.get("slogan") else ""
     default_h1 = f"عناية احترافية بسيارتك في {city}"
     h1 = e(d.get("headline") or default_h1)
@@ -243,7 +243,7 @@ select,input[type=text]{{border-radius:var(--field)}}.out{{border-radius:var(--f
   <footer>
     <div><span class="brand" style="font-size:.95rem">{e(name)}</span>{' — '+e(d['slogan']) if d.get('slogan') else ''}</div>
     <div style="margin-top:6px">{foot_bits}</div>
-    <div style="margin-top:6px">نموذج مصمم ليوضح شكل موقعكم. الأسعار والصور تُستبدل ببياناتكم.</div>
+    <div style="margin-top:6px">هذا تصميم مقترح للعرض فقط، وليس الموقع الرسمي لـ{e(name)}. الصور والأسعار تُستبدل ببياناتكم الحقيقية.</div>
   </footer>
 </div>
 <nav class="dock" aria-label="تواصل سريع">
