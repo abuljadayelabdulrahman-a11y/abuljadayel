@@ -2,102 +2,244 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>عيادة السيارات | حماية الطلاء PPF، عناية تفصيلية، غسيل السيارات في جدة (نموذج تجريبي)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta name="design" content="layout=local;fonts=changa;shape=soft;palette=cream-teal">
+<title>عيادة السيارات | حماية وعناية في حي الحمراء، جدة</title>
+<meta name="description" content="تصميم مقترح للعرض: موقع عيادة السيارات في حي الحمراء بجدة. حماية الطلاء PPF وعناية تفصيلية وغسيل.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Changa:wght@600;700&family=Cairo:wght@400;600&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
-<style>:root{--bg:#f6f4ee;--sf:#ffffff;--sf2:#e9e6dc;--tx:#14231f;--tx2:#4d5c57;--ln:#dcd8cb;
---ac:#0f766e;--act:#ffffff;--r:14px;--rs:10px;--btn:12px;--fd:10px;
---disp:"Changa","Segoe UI",Tahoma,sans-serif;--txt:"Cairo","Segoe UI",Tahoma,sans-serif;--dw:700;
---lat:"Montserrat","Segoe UI",sans-serif;}
-*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-behavior:smooth;overflow-x:clip}
-body{margin:0;background:var(--bg);color:var(--tx);font:400 17px/1.65 var(--txt);overflow-x:clip;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
-h1,h2,h3{font-family:var(--disp);font-weight:var(--dw);margin:0;line-height:1.15;text-wrap:balance}
-p{margin:0}a{color:inherit}
-.in{padding-inline:max(16px,calc((100% - 1080px) / 2))}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:var(--btn);
-font:600 1rem var(--txt);text-decoration:none;border:2px solid transparent;cursor:pointer;background:var(--ac);color:var(--act)}
-.btn.alt{background:transparent;border-color:currentColor;color:inherit}
-.btn:active{transform:scale(.97)}
-:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
-.demo{display:inline-block;padding:3px 12px;border-radius:999px;background:#fff3cd;color:#7a5b00;font:700 .82rem var(--txt)}
-.dock{position:fixed;inset:auto 0 0 0;z-index:30;display:flex;gap:8px;padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--ln)}
-.dock .btn{flex:1}
-.ico{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
-label{display:grid;gap:6px;font-weight:500;font-size:.95rem}
-input[type=text],select{width:100%;min-height:48px;border-radius:var(--fd);border:1px solid var(--ln);padding:0 14px;font:400 1rem var(--txt);background:var(--sf);color:var(--tx)}
-.out{font-size:.92rem;color:var(--tx2);border:1px dashed var(--ln);border-radius:var(--fd);padding:12px}
-.lat{direction:ltr;unicode-bidi:plaintext}
-iframe.map{width:100%;height:280px;border:0;border-radius:var(--rs);display:block}
-@media (min-width:860px){body{padding-bottom:0}.dock{display:none}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef3f2; --card:#fff; --ink:#071a1f; --mute:#4a5f64; --line:#d3dedd;
+  --paint1:#0b3a44; --paint2:#0f5560; --glint:#7cf0e6; --signal:#ff5b2e; --ok:#0c8f7e;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-force]){}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;font-size:16px;-webkit-text-size-adjust:100%}
+h1,h2,h3,.disp{font-family:"Reem Kufi","IBM Plex Sans Arabic",sans-serif;font-weight:700;line-height:1.5;letter-spacing:0}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+.demo-tag{background:#fff3cf;color:#6b4e00;text-align:center;font-size:13px;padding:6px 12px}
+:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
 
-.mapwrap{position:relative}
-.mapwrap iframe.map{height:min(46svh,420px);border-radius:0}
-.card{position:relative;margin:-48px 16px 0;background:var(--sf);border:1px solid var(--ln);border-radius:var(--r);padding:20px;display:grid;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.12);max-width:720px}
-.card h1{font-size:clamp(1.7rem,7vw,2.6rem)}
-.card .cat{color:var(--tx2)}
-.stars{color:#f5a524;letter-spacing:2px}
-.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
-.act{display:grid;justify-items:center;gap:6px;text-decoration:none;font-weight:600;font-size:.9rem;padding:12px 4px;border-radius:var(--rs);background:var(--sf2)}
-.act .ico{color:var(--ac);width:28px;height:28px}
-.act.main{background:var(--ac);color:var(--act)}.act.main .ico{color:var(--act)}
-section{padding-block:36px}
-h2{font-size:1.5rem;margin-bottom:16px}
-.hrs{width:100%;border-collapse:collapse}
-.hrs td{padding:10px 0;border-bottom:1px solid var(--ln)}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chips span{border:1px solid var(--ln);border-radius:999px;padding:6px 14px;background:var(--sf)}
-.list{display:grid;gap:10px;margin-top:16px}
-.list div{display:flex;gap:12px;align-items:flex-start;background:var(--sf);border:1px solid var(--ln);border-radius:var(--rs);padding:14px}
-.list .ico{color:var(--ac)}.list p{color:var(--tx2);font-size:.93rem}
-.rv{display:flex;gap:12px;background:var(--sf);border:1px solid var(--ln);border-radius:var(--r);padding:16px}
-.av{width:42px;height:42px;border-radius:50%;background:var(--ac);color:var(--act);display:grid;place-items:center;font-weight:700;flex:none}
-.pk{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--ln)}
-.pk p{color:var(--tx2);font-size:.9rem}.pk span{color:var(--ac);font-weight:700;white-space:nowrap}
-form{display:grid;gap:14px;background:var(--sf);border:1px solid var(--ln);border-radius:var(--r);padding:20px}
-footer{padding-block:24px;color:var(--tx2);font-size:.88rem;display:grid;gap:4px;border-top:1px solid var(--ln)}
-.wrapc{max-width:760px;margin-inline:auto}
+/* top bar */
+.bar{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Reem Kufi";font-weight:700;font-size:22px;text-decoration:none}
+.brand i{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--paint1),var(--paint2));display:grid;place-items:center;color:var(--glint);font-style:normal;font-size:20px}
+.tel{font-weight:600;text-decoration:none;direction:ltr;font-size:15px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+
+/* hero */
+.hero{padding:18px 0 34px;display:grid;gap:22px}
+.hero h1{font-size:clamp(34px,9vw,60px);max-width:14ch}
+.hero p.lead{color:var(--mute);font-size:17px;max-width:46ch}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 24px;border-radius:14px;font-weight:600;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn-main{background:var(--signal);color:#fff;box-shadow:0 8px 20px -8px rgba(255,91,46,.7)}
+.btn-main:hover{filter:brightness(1.06)}
+.btn-line{background:var(--card);border:1px solid var(--line)}
+
+/* the memorable thing: paint film comparison */
+.film{position:relative;border-radius:24px;overflow:hidden;aspect-ratio:16/10;direction:ltr;user-select:none;
+  background:linear-gradient(120deg,var(--paint1),var(--paint2) 55%,#0a4a52);box-shadow:0 30px 60px -30px rgba(7,26,31,.65)}
+.film::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(100deg,transparent 18%,rgba(255,255,255,.16) 32%,transparent 46%),
+  radial-gradient(120% 60% at 20% 0%,rgba(255,255,255,.22),transparent 60%)}
+.film .worn{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--p,50%)) 0 0);
+  background:linear-gradient(120deg,#0a2f37,#0d444d 55%,#093b43)}
+.film .worn svg{position:absolute;inset:0;width:100%;height:100%}
+.film .worn::after{content:"";position:absolute;inset:0;background:rgba(120,130,125,.14);mix-blend-mode:multiply}
+.film .shine{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.film .shine::after{content:"";position:absolute;top:-20%;bottom:-20%;width:22%;left:var(--p,50%);
+  transform:translateX(-50%) skewX(-18deg);background:linear-gradient(90deg,transparent,rgba(124,240,230,.55),transparent);filter:blur(6px)}
+.film .line{position:absolute;top:0;bottom:0;left:var(--p,50%);width:2px;background:#fff;transform:translateX(-1px);box-shadow:0 0 18px rgba(124,240,230,.9)}
+.film .knob{position:absolute;top:50%;left:var(--p,50%);width:46px;height:46px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.35);color:var(--paint1);font-size:18px;font-weight:700}
+.film input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.film .tag{position:absolute;bottom:12px;font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;background:rgba(7,26,31,.65);color:#fff;backdrop-filter:blur(4px)}
+.film .tag.l{left:12px}.film .tag.r{right:12px;background:rgba(124,240,230,.9);color:#05302c}
+.film-note{font-size:13px;color:var(--mute);margin-top:8px}
+
+/* trust strip */
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 10px}
+.trust div{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 10px;text-align:center}
+.trust b{display:block;font-family:"Reem Kufi";font-size:26px;line-height:1.2}
+.trust span{font-size:13px;color:var(--mute)}
+
+section{padding:34px 0}
+h2{font-size:clamp(26px,6vw,38px);margin-bottom:6px}
+.sub{color:var(--mute);margin-bottom:18px;max-width:52ch}
+
+/* services as a care chart */
+.chart{display:grid;gap:12px}
+.svc{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:start}
+.svc .ic{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--paint1),var(--paint2));color:var(--glint);display:grid;place-items:center}
+.svc svg{width:26px;height:26px}
+.svc h3{font-size:21px;margin-bottom:2px}
+.svc p{color:var(--mute);font-size:15px}
+
+/* booking */
+.book{background:linear-gradient(135deg,var(--paint1),#08282f);color:#fff;border-radius:28px;padding:24px 18px}
+.book h2{color:#fff}.book .sub{color:#b8d4d2}
+form{display:grid;gap:14px;margin-top:8px}
+fieldset{border:0;display:grid;gap:8px}
+legend{font-weight:600;margin-bottom:6px}
+.opts{display:grid;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0}
+.opt label{display:flex;align-items:center;gap:10px;min-height:50px;padding:0 14px;border-radius:14px;border:1px solid rgba(255,255,255,.25);cursor:pointer}
+.opt label::before{content:"";width:18px;height:18px;border-radius:50%;border:2px solid #9cc;flex:none}
+.opt input:checked+label{background:rgba(124,240,230,.16);border-color:var(--glint)}
+.opt input:checked+label::before{background:var(--glint);border-color:var(--glint);box-shadow:inset 0 0 0 3px #08282f}
+.opt input:focus-visible+label{outline:3px solid var(--signal);outline-offset:2px}
+.fld label{display:block;font-weight:600;margin-bottom:6px}
+.fld input{width:100%;min-height:50px;border-radius:14px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;padding:0 14px;font:inherit}
+.fld input::placeholder{color:#8fb3b1}
+.out{display:none;font-size:14px;color:var(--glint)}.out.show{display:block}
+
+/* place */
+.place{display:grid;gap:14px}
+.hours{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:6px 18px}
+.hours div{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.hours div:last-child{border:0}
+iframe{width:100%;height:260px;border:0;border-radius:var(--r)}
+footer{padding:26px 0 96px;color:var(--mute);font-size:14px}
+.dock{position:fixed;inset:auto 0 0 0;background:rgba(238,243,242,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 16px;display:flex;gap:10px;z-index:5}
+.dock .btn{flex:1;min-height:48px}
+
+@media(min-width:820px){
+  .hero{grid-template-columns:1fr 1.1fr;align-items:center;gap:40px;padding-top:34px}
+  .chart{grid-template-columns:repeat(3,1fr)}
+  .svc{grid-template-columns:1fr}
+  .place{grid-template-columns:1fr 1.3fr}
+  .book{padding:40px}.opts{grid-template-columns:repeat(3,1fr)}
+  .dock{display:none}footer{padding-bottom:40px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
-<body class="t-local">
-<div class="mapwrap"><iframe class="map" title="موقع عيادة السيارات على الخريطة" src="https://maps.google.com/maps?q=21.5303125,39.1788763&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-<div class="wrapc"><div class="card"><span class="demo">تصميم مقترح للعرض (نموذج تجريبي)</span><h1>عيادة السيارات</h1><p class="cat">حماية الطلاء PPF • عناية تفصيلية • غسيل السيارات • حي الحمراء، جدة</p><p><b>4.9</b> <span class="stars">★★★★★</span> <span style="color:var(--tx2)">(228 تقييم)</span></p>
-<div class="acts"><a class="act main" href="https://wa.me/966539940095" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><path d="M4 20l1.5-4A8 8 0 1 1 9 19z"/></svg>واتساب</a>
-<a class="act" href="tel:+966539940095"><svg class="ico" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>اتصال</a>
-<a class="act" href="https://www.google.com/maps/search/?api=1&query=21.5303125,39.1788763" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>الاتجاهات</a></div>
-<p style="color:var(--tx2)">طريق المدينة المنورة، حي الحمراء، جدة</p></div></div>
-<section class="in wrapc"><h2>عيادة لسيارتك: حماية وعناية احترافية في حي الحمراء بجدة</h2><div class="chips"><span>حماية الطلاء PPF</span><span>عناية تفصيلية</span><span>غسيل السيارات</span></div><div class="list"><div><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/></svg><span><b>حماية الطلاء PPF</b><p>فيلم شفاف يحمي الطلاء من الحصى والخدوش وآثار الطريق.</p></span></div><div><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg><span><b>عناية تفصيلية</b><p>عناية داخلية وخارجية تفصيلية ترجّع للسيارة شكلها ولمعتها.</p></span></div><div><svg class="ico" viewBox="0 0 24 24"><path d="M5 14h14l-1.5-5h-11zM7 14v3M17 14v3M8 6l1-2M12 6V3M16 6l-1-2"/></svg><span><b>غسيل السيارات</b><p>غسيل وتنظيف احترافي للسيارة من الداخل والخارج.</p></span></div></div></section>
-<section class='in wrapc'><h2>أوقات العمل</h2><table class='hrs'><tr><td>السبت – الخميس: ٢:٠٠ م – ١٠:٠٠ م</td></tr><tr><td>الجمعة: مغلق</td></tr></table></section>
-<section class="in wrapc"><h2>الباقات</h2><div class="pk"><div><b>باقة الأساس</b><p>حماية الطلاء PPF، عناية تفصيلية</p></div><span>السعر حسب نوع السيارة</span></div><div class="pk"><div><b>الباقة المميزة</b><p>حماية الطلاء PPF، عناية تفصيلية، غسيل السيارات</p></div><span>السعر حسب نوع السيارة</span></div><div class="pk"><div><b>الباقة الكاملة</b><p>حماية الطلاء PPF، عناية تفصيلية، غسيل السيارات</p></div><span>السعر حسب نوع السيارة</span></div><p style="color:var(--tx2);font-size:.88rem;margin-top:10px">أسماء الباقات وأسعارها أمثلة تُستبدل بباقاتكم الفعلية.</p></section>
-<section class="in wrapc" id="book"><h2>احجز موعد</h2><form class="" data-book="966539940095"><fieldset class="opts"><legend>وش تحتاج سيارتك؟</legend><label class="opt"><input type="radio" name="svc" value="حماية الطلاء PPF" checked><span>حماية الطلاء PPF</span></label><label class="opt"><input type="radio" name="svc" value="عناية تفصيلية"><span>عناية تفصيلية</span></label><label class="opt"><input type="radio" name="svc" value="غسيل السيارات"><span>غسيل السيارات</span></label></fieldset><label>موديل السيارة<input type="text" name="car" placeholder="مثال: لكزس 2023"></label><label>الاسم<input type="text" name="nm" autocomplete="name"></label><button class="btn" type="submit">أرسل الطلب على واتساب</button><p class="out" hidden role="status"></p></form></section>
-<footer class="in wrapc"><b>عيادة السيارات</b><span class="lat">053 994 0095</span><p class="fine">هذا تصميم مقترح للعرض فقط، وليس الموقع الرسمي لـعيادة السيارات. الصور والأسعار تُستبدل ببياناتكم الحقيقية.</p></footer>
-<nav class="dock" aria-label="تواصل سريع"><a class="btn" href="https://wa.me/966539940095" target="_blank" rel="noopener">واتساب</a><a class="btn alt" href="tel:+966539940095">اتصال</a></nav>
+<body>
+<div class="demo-tag">تصميم مقترح للعرض (نموذج تجريبي)</div>
+<div class="wrap">
+  <div class="bar">
+    <a class="brand" href="#top"><i>+</i>عيادة السيارات</a>
+    <a class="tel" href="tel:+966539940095">053 994 0095</a>
+  </div>
+
+  <header class="hero" id="top">
+    <div style="display:grid;gap:18px">
+      <h1>عيادة لسيارتك، بحماية تدوم ولمعة تشوفها</h1>
+      <p class="lead">حماية الطلاء PPF وعناية تفصيلية وغسيل في حي الحمراء بجدة. اختر الخدمة وأرسل نوع سيارتك، وطلبك يوصلنا على الواتساب جاهز.</p>
+      <div class="cta">
+        <a class="btn btn-main" href="#book">اطلب موعدك</a>
+        <a class="btn btn-line" href="https://wa.me/966539940095" target="_blank" rel="noopener">راسلنا واتساب</a>
+      </div>
+    </div>
+    <div>
+      <div class="film" id="film" style="--p:100%" role="group" aria-label="مقارنة توضيحية: طلاء بدون حماية وطلاء بحماية PPF">
+        <div class="worn">
+          <svg viewBox="0 0 800 500" preserveAspectRatio="none" aria-hidden="true" fill="none" stroke="rgba(255,255,255,.35)" stroke-linecap="round">
+            <path d="M60 90 C160 70 240 140 330 110" stroke-width="1.6"/>
+            <path d="M120 260 C220 230 300 300 420 260" stroke-width="1.2"/>
+            <path d="M40 380 C150 350 230 420 360 380" stroke-width="1.8"/>
+            <path d="M210 40 C260 120 300 180 330 250" stroke-width="1.1"/>
+            <path d="M500 120 C560 160 620 140 700 190" stroke-width="1.4"/>
+            <path d="M470 330 C560 300 640 360 740 320" stroke-width="1.2"/>
+            <path d="M90 190 l60 14M280 330 l48 -18M560 60 l54 20" stroke-width="2"/>
+            <circle cx="150" cy="150" r="3" fill="rgba(255,255,255,.35)"/><circle cx="390" cy="210" r="2.5" fill="rgba(255,255,255,.35)"/><circle cx="610" cy="260" r="3" fill="rgba(255,255,255,.35)"/>
+          </svg>
+        </div>
+        <div class="shine"></div>
+        <div class="line"></div><div class="knob" aria-hidden="true">↔</div>
+        <span class="tag l">طلاء بدون حماية</span><span class="tag r">طلاء بحماية PPF</span>
+        <input id="rng" type="range" min="0" max="100" value="100" aria-label="اسحب للمقارنة">
+      </div>
+      <p class="film-note">رسم توضيحي للفكرة، وليس صورة لعمل فعلي. اسحب للمقارنة.</p>
+    </div>
+  </header>
+
+  <div class="trust" aria-label="معلومات عن العيادة">
+    <div><b>4.9</b><span>تقييم على خرائط قوقل</span></div>
+    <div><b>228</b><span>رأي من العملاء</span></div>
+    <div><b>٢ م</b><span>تفتح من السبت إلى الخميس</span></div>
+  </div>
+
+  <section>
+    <h2>خدمات العيادة</h2>
+    <p class="sub">ثلاث خدمات واضحة، وتختار منها قبل ما تتواصل معنا.</p>
+    <div class="chart">
+      <article class="svc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div><div><h3>حماية الطلاء PPF</h3><p>فيلم شفاف يحمي الطلاء من الحصى والخدوش وآثار الطريق.</p></div></article>
+      <article class="svc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17l.8 2.2L22 20l-2.2.8L19 23l-.8-2.2L16 20l2.2-.8z"/></svg></div><div><h3>عناية تفصيلية</h3><p>عناية داخلية وخارجية تفصيلية ترجّع للسيارة شكلها ولمعتها.</p></div></article>
+      <article class="svc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.2 6 10.5A6 6 0 0 1 6 13.5C6 9.2 12 3 12 3z"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2"/></svg></div><div><h3>غسيل السيارات</h3><p>غسيل وتنظيف احترافي للسيارة من الداخل والخارج.</p></div></article>
+    </div>
+  </section>
+
+  <section id="book">
+    <div class="book">
+      <h2>اطلب موعدك</h2>
+      <p class="sub">اختر الخدمة وأرسل نوع سيارتك. الرسالة تفتح لك على الواتساب جاهزة.</p>
+      <form id="f">
+        <fieldset><legend>وش تحتاج سيارتك؟</legend>
+          <div class="opts">
+            <div class="opt"><input type="radio" name="s" id="s1" value="حماية الطلاء PPF" checked><label for="s1">حماية الطلاء PPF</label></div>
+            <div class="opt"><input type="radio" name="s" id="s2" value="عناية تفصيلية"><label for="s2">عناية تفصيلية</label></div>
+            <div class="opt"><input type="radio" name="s" id="s3" value="غسيل السيارات"><label for="s3">غسيل السيارات</label></div>
+          </div>
+        </fieldset>
+        <div class="fld"><label for="car">نوع السيارة وموديلها</label><input id="car" placeholder="مثال: لكزس 2023" autocomplete="off"></div>
+        <div class="fld"><label for="nm">الاسم</label><input id="nm" autocomplete="name"></div>
+        <button class="btn btn-main" type="submit">أرسل الطلب على واتساب</button>
+        <p class="out" id="out" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="place">
+    <div>
+      <h2>وين نلقاك</h2>
+      <p class="sub">طريق المدينة المنورة، حي الحمراء، جدة.</p>
+      <div class="hours">
+        <div><span>السبت – الخميس</span><b>٢:٠٠ م – ١٠:٠٠ م</b></div>
+        <div><span>الجمعة</span><b>مغلق</b></div>
+      </div>
+      <p style="margin-top:12px"><a class="btn btn-line" href="https://www.google.com/maps/search/?api=1&query=21.5303125,39.1788763" target="_blank" rel="noopener">افتح الاتجاهات في قوقل</a></p>
+    </div>
+    <iframe title="موقع عيادة السيارات على الخريطة" src="https://maps.google.com/maps?q=21.5303125,39.1788763&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </section>
+
+  <footer>
+    <p class="disp" style="color:var(--ink);font-size:20px">عيادة السيارات</p>
+    <p>هذا تصميم مقترح للعرض فقط، وليس الموقع الرسمي للعيادة. الخدمات والتقييم والدوام من صفحتكم على خرائط قوقل، والصور والأسعار تُستبدل ببياناتكم الحقيقية.</p>
+  </footer>
+</div>
+
+<div class="dock">
+  <a class="btn btn-main" href="https://wa.me/966539940095" target="_blank" rel="noopener">واتساب</a>
+  <a class="btn btn-line" href="tel:+966539940095">اتصال</a>
+</div>
+
 <script>
 (function(){
-  document.querySelectorAll('[data-book]').forEach(function(form){
-    form.addEventListener('submit',function(ev){ev.preventDefault();
-      var f=function(n){var el=form.querySelector('[name='+n+']');if(!el)return '';
-        if(el.type==='radio'){var c=form.querySelector('[name='+n+']:checked');return c?c.value:'';}return el.value.trim();};
-      var svc=f('svc'),car=f('car'),nm=f('nm');
-      var text='السلام عليكم، أبغى أحجز موعد'+(svc?' لخدمة '+svc:'')+(car?' لسيارة '+car:'')+(nm?'. الاسم: '+nm:'')+'.';
-      var out=form.querySelector('.out');if(out){out.textContent=text;out.hidden=false;}
-      window.open('https://wa.me/'+form.dataset.book+'?text='+encodeURIComponent(text),'_blank');});
-  });
-  document.querySelectorAll('[data-tabs]').forEach(function(t){
-    var btns=t.querySelectorAll('[role=tab]'),panels=document.querySelectorAll('[data-panel]');
-    t.hidden=false;panels.forEach(function(p,i){p.hidden=i>0;});
-    btns.forEach(function(b,i){b.addEventListener('click',function(){
-      btns.forEach(function(x){x.setAttribute('aria-selected','false');});b.setAttribute('aria-selected','true');
-      panels.forEach(function(p,j){p.hidden=j!==i;});});});
-  });
-  var cmp=document.getElementById('cmp');
-  if(cmp){var r=cmp.querySelector('input'),h=cmp.querySelector('.handle'),b=cmp.querySelector('.before');
-    r.addEventListener('input',function(){b.style.clipPath='inset(0 0 0 '+r.value+'%)';h.style.left=r.value+'%';});}
+  var film=document.getElementById('film'),rng=document.getElementById('rng');
+  function set(v){film.style.setProperty('--p',v+'%');rng.value=v}
+  rng.addEventListener('input',function(){set(this.value)});
+  // one entrance moment: the film sweeps across once
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){set(55);return}
+  var t0=null,from=100,to=55,dur=1600,touched=false;
+  rng.addEventListener('pointerdown',function(){touched=true});
+  function ease(x){return 1-Math.pow(1-x,3)}
+  function step(ts){if(touched)return;if(!t0)t0=ts;var k=Math.min((ts-t0)/dur,1);set(Math.round(from+(to-from)*ease(k)));if(k<1)requestAnimationFrame(step)}
+  setTimeout(function(){requestAnimationFrame(step)},500);
 })();
+document.getElementById('f').addEventListener('submit',function(e){
+  e.preventDefault();
+  var s=document.querySelector('input[name=s]:checked').value,c=document.getElementById('car').value.trim(),n=document.getElementById('nm').value.trim();
+  var text='السلام عليكم، أبغى '+s+(c?' لسيارتي '+c:'')+(n?'. الاسم: '+n:'')+'.';
+  var o=document.getElementById('out');o.textContent='تم تجهيز رسالتك وتفتح لك الآن على الواتساب.';o.classList.add('show');
+  window.open('https://wa.me/966539940095?text='+encodeURIComponent(text),'_blank');
+});
 </script>
 </body>
 </html>
