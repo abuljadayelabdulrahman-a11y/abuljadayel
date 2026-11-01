@@ -16,7 +16,10 @@ says in the footer that it is not their official site, and carries `noindex`.
    another demo or the example (see "Every site is different" below).
    Never invent prices, packages, slogans, awards or reviews; without real prices
    the page shows "السعر حسب نوع السيارة".
-3. **Build (1 min).** `python3 tools/make_demo.py tools/demos/<slug>.json`
+3. **Build (1 min).** First sync the demos already published on the Cloudflare Worker
+   (list the KV keys of namespace c2697f0e83a54a778107e0a3ffbcbafb, then
+   `python3 tools/sync_published.py <every key>`), so the builder compares against them
+   too. Then `python3 tools/make_demo.py tools/demos/<slug>.json`
    writes `sample/demos/<slug>/index.html`. The design (7 layouts, fonts, corners,
    palettes) is picked so neighbouring shops never look alike. To choose one:
    `"design": {"layout": "showroom"}`; `"theme": "dark"` or `"light"`.

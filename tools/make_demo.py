@@ -300,6 +300,23 @@ def check_unique(data, slug):
         shared = _ngrams(mine) & _ngrams(" ".join([other.get("headline") or "", other.get("intro") or ""]))
         if shared:
             problems.append(f'wording copied from {os.path.basename(f)}: "{sorted(shared)[0]}"')
+    # also compare with every built or synced page (demos published on the Worker have no JSON here)
+    first_words = []
+    for f in glob.glob(os.path.join(ROOT, "sample", "demos", "*", "index.html")):
+        if os.path.basename(os.path.dirname(f)) == slug:
+            continue
+        txt = open(f, encoding="utf-8").read()
+        m = re.search(r"<h1[^>]*>(.*?)</h1>", txt, re.S)
+        h = re.sub(r"<[^>]+>", " ", m.group(1)) if m else ""
+        lead = re.search(r'<p class="lead">(.*?)</p>', txt, re.S)
+        if h.split():
+            first_words.append(h.split()[0])
+        shared = _ngrams(mine) & _ngrams(h + " " + (lead.group(1) if lead else ""))
+        if shared:
+            problems.append(f'wording copied from the {os.path.basename(os.path.dirname(f))} demo: "{sorted(shared)[0]}"')
+    hw = (data.get("headline") or "").split()
+    if hw and first_words.count(hw[0]) >= 2:
+        problems.append(f'{first_words.count(hw[0])} demos already open their headline with "{hw[0]}"; start this one differently')
     if problems:
         sys.exit("not unique enough, rewrite the copy for this shop:\n- " + "\n- ".join(problems))
 
