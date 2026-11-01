@@ -16,6 +16,14 @@ import glob, hashlib, os, re
 LAYOUTS = ["pro", "classic", "showroom", "garage", "clean", "magazine", "blocks", "local"]
 # 2026-11-01: owner rejected the old text-only designs; every new demo uses "pro" unless a layout is forced
 DEFAULT_LAYOUT = "pro"
+# Inside the "pro" design every site also gets its own page structure (look), hero photo and
+# signature animation (sig), so pro sites never repeat each other (owner, 2026-11-01).
+LOOKS = ["split", "full", "frame", "editorial"]
+HEROES = ["hero", "extra1", "extra2", "sparkle"]  # neutral photos (no service-specific ones)
+SIGS = ["beads", "foam", "sweep", "film", "tint", "zoom", "kinetic", "draw", "tilt", "countup"]
+# which signature animations suit which service (icon key); others are generic
+SIG_FIT = {"drop": ["beads", "sweep"], "shield": ["film", "sweep"], "sun": ["tint"], "polish": ["sweep", "zoom"],
+           "wash": ["foam", "beads"], "seat": ["kinetic", "tilt"], "wrench": ["draw", "tilt"], "sparkle": ["zoom", "sweep"]}
 # layouts that only suit one theme (the rest work in light and dark)
 LAYOUT_THEME = {"showroom": "dark", "magazine": "light", "pro": "dark"}
 
@@ -86,8 +94,20 @@ def _least_used(options, taken, seed):
     return pool[int(hashlib.md5(seed.encode()).hexdigest(), 16) % len(pool)]
 
 
-def pick_design(root, slug, theme=None, wanted=None):
-    """Return {layout, fonts, shape, palette}. Re-running for the same slug keeps its design."""
+def _pick_sig(taken, fit, seed, has_rating):
+    """Least-used signature animation; among equally used ones prefer those that suit the shop."""
+    opts = [s for s in SIGS if has_rating or s != "countup"]
+    counts = {o: 0 for o in opts}
+    for t in taken:
+        if t in counts:
+            counts[t] += 1
+    h = lambda o: int(hashlib.md5((seed + o).encode()).hexdigest(), 16)
+    return min(opts, key=lambda o: (counts[o], 0 if o in fit else 1, h(o)))
+
+
+def pick_design(root, slug, theme=None, wanted=None, service_keys=(), has_rating=False):
+    """Return {layout, fonts, shape, palette} (+ look, hero, sig for "pro").
+    Re-running for the same slug keeps its design."""
     wanted = dict(wanted or {})
     used = [(s, d) for s, d in _used(root)]
     for s, d in used:
@@ -102,6 +122,15 @@ def pick_design(root, slug, theme=None, wanted=None):
     out["shape"] = wanted.get("shape") or _least_used(list(SHAPES), [d.get("shape") for d in others], slug + "S")
     pals = [p for p, v in PALETTES.items() if not theme or v[0] == theme]
     out["palette"] = wanted.get("palette") or _least_used(pals, [d.get("palette") for d in others], slug + "P")
+    if out["layout"] == "pro":
+        pros = [d for d in others if d.get("layout") == "pro"]
+        out["look"] = wanted.get("look") or _least_used(LOOKS, [d.get("look", "split") for d in pros], slug + "L")
+        out["hero"] = wanted.get("hero") or _least_used(HEROES, [d.get("hero", "hero") for d in pros], slug + "H")
+        fit = {s for k in service_keys for s in SIG_FIT.get(k, [])}
+        out["sig"] = wanted.get("sig") or _pick_sig([d.get("sig") for d in pros], fit, slug, has_rating)
+        for k, v in (("look", LOOKS), ("hero", HEROES), ("sig", SIGS)):
+            if out[k] not in v:
+                raise SystemExit(f"unknown {k}: {out[k]}")
     for k, v in (("layout", LAYOUTS), ("fonts", FONTS), ("shape", SHAPES), ("palette", PALETTES)):
         if out[k] not in v:
             raise SystemExit(f"unknown {k}: {out[k]}")

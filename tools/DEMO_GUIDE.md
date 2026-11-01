@@ -12,6 +12,8 @@ says in the footer that it is not their official site, and carries `noindex`.
    Check whether the Maps website button is missing, broken or points to social media.
 2. **Write the input (5 min).** Copy `demo_example.json` to `demos/<slug>.json`
    (`<slug>` = short lowercase latin name). Leave out anything you don't know.
+   Write the `headline`, `intro` and `brand_sub` fresh for this shop, never copied from
+   another demo or the example (see "Every site is different" below).
    Never invent prices, packages, slogans, awards or reviews; without real prices
    the page shows "السعر حسب نوع السيارة".
 3. **Build (1 min).** `python3 tools/make_demo.py tools/demos/<slug>.json`
@@ -41,3 +43,31 @@ show with real prices), a WhatsApp booking form and a location card. Choose the 
 `"design": {"palette": "obsidian-gold"}` (dark palettes only) and add `"latin_name"` for the
 English line under the name. Before any demo link goes to a customer, check it at 390 px and
 get the owner's OK on the first demos built with this design.
+
+## Every site is different (owner, 2026-11-01)
+
+The owner wants a unique website and animation on every site. The same PPF wording,
+photos and layout kept appearing on every demo; that must not happen again.
+
+- **Content comes only from this shop.** List only services on its real listing, in the
+  order that matters for *this* shop. PPF (or any service) appears only if the shop
+  really offers it, and leads only if it is clearly their main thing. Lead with what
+  makes them different (their speciality, area, a detail from their reviews).
+- **Own words every time.** The headline and intro are written for this shop. The
+  builder refuses a new demo with no headline, with a stock line used before
+  ("اختر الخدمة واكتب نوع سيارتك"، "وتوصلنا رسالتك على الواتساب مباشرة"،
+  "حيث تلتقي الفخامة بالحماية"، "عناية احترافية بسيارتك في") or with five words in a
+  row copied from another demo. Rewrite until it passes; don't add the slug to get round it.
+- **Own design.** Within "pro" each site gets a different look (page structure: split,
+  full, frame, editorial), hero photo and signature animation (water beads, foam, light
+  sweep, film, tint, slow zoom, word-by-word headline, car outline drawing, 3D cards,
+  rating count-up), on top of its own fonts, corners and palette. The builder picks the
+  least-used of each and prefers animations that fit the shop's services. Force one with
+  `"design": {"look": "frame", "sig": "foam"}` only when there's a reason.
+- **Relevant photos only.** The gallery shows neutral car photos and photos of services
+  the shop offers, never a service it doesn't do.
+- **Check the log.** Every build updates `tools/DESIGN_LOG.md` (each site's layout,
+  look, animation, hero photo, fonts, shape, palette). `python3 tools/make_demo.py --log`
+  prints it. Before sending, compare the new demo with the last few: if it still feels
+  like the same site, change the look or animation.
+- Demos already sent to customers are not rebuilt or changed.

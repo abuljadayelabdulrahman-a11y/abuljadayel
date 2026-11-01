@@ -19,7 +19,7 @@ To force a choice: "design": {"layout": "garage", "fonts": "changa", "shape": "s
 "palette": "carbon-lime"}.
 Re-running for a slug that already exists keeps that shop's design.
 """
-import json, sys, html, os, re
+import glob, json, sys, html, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -72,7 +72,7 @@ def build(d, design):
     q = f"{lat},{lng}" if lat and lng else e(d.get("maps_query") or (name + " " + city))
 
     if L == "pro":
-        return P.render(d, c, F, phone, pdisp, fonts_url, design_meta)
+        return P.render(d, c, F, phone, pdisp, fonts_url, design_meta, design)
 
     if L != "classic":
         packs = d.get("packs") or [
@@ -272,18 +272,71 @@ select,input[type=text]{{border-radius:var(--field)}}.out{{border-radius:var(--f
 """
 
 
+# Sentences that ended up on many demos. New demos must say it their own way.
+STOCK_PHRASES = ["وتوصلنا رسالتك على الواتساب مباشرة", "اختر الخدمة واكتب نوع سيارتك", "حيث تلتقي الفخامة بالحماية",
+                 "عناية احترافية بسيارتك في"]
+
+
+def _ngrams(text, n=5):
+    w = re.findall(r"[\w\u0600-\u06FF]+", text or "")
+    return {" ".join(w[i:i + n]) for i in range(len(w) - n + 1)}
+
+
+def check_unique(data, slug):
+    """Stop a NEW demo whose headline or intro repeats another demo's wording."""
+    problems = []
+    if not data.get("headline"):
+        problems.append('add a "headline" written for this shop (what makes it different, from its real listing or reviews)')
+    mine = " ".join([data.get("headline") or "", data.get("intro") or "", data.get("brand_sub") or ""])
+    for ph in STOCK_PHRASES:
+        if ph in mine:
+            problems.append(f'stock phrase used on other demos: "{ph}"')
+    for f in glob.glob(os.path.join(HERE, "demos", "*.json")):
+        other = json.load(open(f, encoding="utf-8"))
+        if re.sub(r"[^a-z0-9-]", "", str(other.get("slug", "")).lower()) == slug:
+            continue
+        if data.get("headline") and data.get("headline") == other.get("headline"):
+            problems.append(f'same headline as {os.path.basename(f)}')
+        shared = _ngrams(mine) & _ngrams(" ".join([other.get("headline") or "", other.get("intro") or ""]))
+        if shared:
+            problems.append(f'wording copied from {os.path.basename(f)}: "{sorted(shared)[0]}"')
+    if problems:
+        sys.exit("not unique enough, rewrite the copy for this shop:\n- " + "\n- ".join(problems))
+
+
+def write_log():
+    """tools/DESIGN_LOG.md: what every demo and client site used, checked before each new build."""
+    rows = []
+    for slug, d in sorted(D._used(ROOT)):
+        rows.append(f"| {slug} | {d.get('layout', '')} | {d.get('look', '-')} | {d.get('sig', '-')} | {d.get('hero', '-')} | "
+                    f"{d.get('fonts', '')} | {d.get('shape', '')} | {d.get('palette', '')} |")
+    open(os.path.join(HERE, "DESIGN_LOG.md"), "w", encoding="utf-8").write(
+        "# Design log\n\nWritten by make_demo.py on every build. Each site's design, so no two look alike.\n\n"
+        "| site | layout | look | animation | hero photo | fonts | shape | palette |\n|---|---|---|---|---|---|---|---|\n"
+        + "\n".join(rows) + "\n")
+
+
 if __name__ == "__main__":
+    if len(sys.argv) == 2 and sys.argv[1] == "--log":
+        write_log()
+        print(open(os.path.join(HERE, "DESIGN_LOG.md"), encoding="utf-8").read())
+        sys.exit()
     if len(sys.argv) != 2:
         sys.exit(__doc__)
     data = json.load(open(sys.argv[1], encoding="utf-8"))
     slug = re.sub(r"[^a-z0-9-]", "", data.get("slug", "").lower())
     if not slug:
         sys.exit("slug must be lowercase latin letters/numbers")
+    is_new = not os.path.exists(os.path.join(ROOT, "sample", "demos", slug, "index.html"))
+    if is_new:
+        check_unique(data, slug)
     theme = data.get("theme") if data.get("theme") in ("dark", "light") else None
-    design = D.pick_design(ROOT, slug, theme, data.get("design"))
+    keys = [s.get("photo") or s.get("icon") or "sparkle" for s in data.get("services") or []]
+    design = D.pick_design(ROOT, slug, theme, data.get("design"), keys, bool(data.get("rating") and data.get("reviews")))
     out_dir = os.path.join(ROOT, "sample", "demos", slug)
     os.makedirs(out_dir, exist_ok=True)
     page = build(data, design)
     open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8").write(page)
     print(f"wrote sample/demos/{slug}/index.html -> https://carcare-sample.pages.dev/demos/{slug}/")
     print("design: " + ", ".join(f"{k}={v}" for k, v in design.items()))
+    write_log()

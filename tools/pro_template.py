@@ -8,6 +8,11 @@ Made 2026-11-01 after the owner rejected the text-only demos. What it fixes:
 - real Google rating and review only; no invented numbers, names or prices
 - booking form that opens a ready WhatsApp message, location card instead of a heavy map
 - sticky WhatsApp + call dock with page padding so it never covers content
+
+Uniqueness (owner, 2026-11-01: "unique website and animations on every site"): inside this
+design every site gets its own look (page structure), hero photo and signature animation,
+picked by designs.pick_design so no two sites match. The gallery only shows photos of
+services the shop really offers plus neutral car photos (no PPF photo for a shop without PPF).
 """
 import html
 
@@ -39,6 +44,125 @@ def img(key, w=800):
     return f"https://images.unsplash.com/photo-{pid}?w={w}&q=70&auto=format&fit=crop"
 
 
+NEUTRAL = {"hero", "sparkle", "extra1", "extra2"}
+
+# section order and headings per look
+ORDER = {"split": ["services", "gallery", "middle", "reviews"],
+         "full": ["services", "middle", "gallery", "reviews"],
+         "frame": ["reviews", "services", "gallery", "middle"],
+         "editorial": ["services", "reviews", "gallery", "middle"]}
+TITLES = {"split": dict(services="خدماتنا", work="من أعمالنا", reviews="وش يقولون عملاؤنا"),
+          "full": dict(services="وش نقدم لسيارتك", work="أجواء الشغل", reviews="كلام عملائنا"),
+          "frame": dict(services="خدماتنا", work="لقطات", reviews="تقييمات عملائنا"),
+          "editorial": dict(services="الخدمات", work="معرض الصور", reviews="من تقييمات قوقل")}
+
+# ---- looks: the same content in a different page structure ----
+LOOK_CSS = """
+.look-full .hero-img{height:74vh;min-height:460px;max-height:760px;object-position:58% 50%}
+.look-full .shade{background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,.1) 35%,var(--bg) 96%)}
+.look-full .hero-in{position:absolute;inset:auto 0 0 0;margin:0;max-width:none;padding-bottom:28px}
+.look-full .svcs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 6px;scrollbar-width:none}
+.look-full .svcs::-webkit-scrollbar{display:none}
+.look-full .svc,.look-full .svcs .svc:last-child:nth-child(odd){flex:0 0 78%;scroll-snap-align:start;grid-column:auto}
+.look-full .svc img,.look-full .svcs .svc:last-child:nth-child(odd) img{aspect-ratio:4/5}
+.look-full .strip{display:grid;grid-template-columns:1fr 1fr;overflow:visible;margin:0;padding:0}
+.look-full .strip img{aspect-ratio:1}.look-full .strip img:first-child{grid-column:1/-1;aspect-ratio:16/9}
+.look-frame .hero-in{order:-1;margin-top:0;padding-top:28px}
+.look-frame .hero-media{margin:0 16px;border-radius:22px;border:1px solid var(--ac)}
+.look-frame .shade{display:none}.look-frame .hero-img{height:38vh;min-height:220px}
+.look-frame h2::after{width:100%;height:1px;opacity:.5}
+.look-frame .svcs{grid-template-columns:1fr}
+.look-frame .svc{display:flex;align-items:center}
+.look-frame .svc img,.look-frame .svcs .svc:last-child:nth-child(odd) img{width:36%;aspect-ratio:1;flex:none}
+.look-frame .strip img{flex-basis:58%;aspect-ratio:3/4;border-radius:999px 999px 14px 14px}
+.look-editorial .hero-in{order:-1;margin-top:0;padding-top:30px;position:relative}
+.look-editorial .hero-in::before{content:attr(data-latin);position:absolute;inset:6px 16px auto auto;font:800 clamp(2.4rem,13vw,5rem)/1 Montserrat,sans-serif;color:transparent;-webkit-text-stroke:1px var(--ln);white-space:nowrap;overflow:hidden;max-width:calc(100% - 32px);z-index:-1}
+.look-editorial h1{font-size:clamp(2.2rem,10vw,3.6rem)}
+.look-editorial .hero-media{margin:0 16px;border-radius:6px}.look-editorial .shade{display:none}
+.look-editorial .hero-img{height:auto;aspect-ratio:16/10;min-height:0}
+.look-editorial h2{font-size:2rem}.look-editorial h2::after{display:none}
+.look-editorial .svcs{grid-template-columns:1fr;counter-reset:s;gap:18px}
+.look-editorial .svc{background:none;border:0;border-top:1px solid var(--ln);border-radius:0;padding-top:14px;counter-increment:s}
+.look-editorial .svc img,.look-editorial .svcs .svc:last-child:nth-child(odd) img{aspect-ratio:16/9;border-radius:6px}
+.look-editorial .svc-t{padding:10px 0 0}.look-editorial .svc-t::before{content:"0" counter(s);font:700 .8rem Montserrat,sans-serif;color:var(--ac);letter-spacing:.12em}
+.look-editorial .strip{display:block;columns:2;column-gap:10px;overflow:visible;margin:0;padding:0}
+.look-editorial .strip img{width:100%;margin-bottom:10px;border-radius:6px;aspect-ratio:3/4;break-inside:avoid}
+.look-editorial .strip img:nth-child(even){aspect-ratio:1}
+@media (min-width:760px){
+.look-full .svc,.look-full .svcs .svc:last-child:nth-child(odd){flex-basis:32%}
+.look-frame .svcs{grid-template-columns:1fr 1fr}.look-frame .hero-img{height:56vh}
+.look-editorial .svc{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+.look-editorial .svc:nth-child(even) img{order:2}.look-editorial .strip{columns:3}}
+"""
+
+# ---- signature animations: one per site ----
+SIG_CSS = """
+.fx-beads i,.fx-foam i{position:absolute;border-radius:50%;opacity:0}
+.fx-beads i{background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.95) 0 10%,rgba(255,255,255,.3) 28%,rgba(255,255,255,.06) 58%,transparent 70%);box-shadow:0 2px 3px rgba(0,0,0,.35);animation:bead 7s ease-in infinite}
+@keyframes bead{0%{opacity:0;transform:scale(.3)}12%{opacity:1;transform:scale(1)}65%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(70px) scaleY(1.3)}}
+.fx-foam i{bottom:-30px;border:1px solid rgba(255,255,255,.55);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.5),rgba(255,255,255,.05) 60%);animation:foam 6s linear infinite}
+@keyframes foam{0%{opacity:0;transform:translate(0,0)}10%{opacity:.9}50%{transform:translate(12px,-28vh)}100%{opacity:0;transform:translate(-8px,-56vh)}}
+.fx-sweep::after{content:"";position:absolute;top:0;bottom:0;left:-50%;width:35%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transform:skewX(-18deg);animation:sweep 5.5s ease-in-out 1s infinite}
+@keyframes sweep{0%{left:-50%}45%,100%{left:130%}}
+.fx-film::after,.fx-tint::after{content:"";position:absolute;inset:0;clip-path:inset(0 0 0 100%);animation:film 2.4s cubic-bezier(.6,.1,.2,1) .5s forwards}
+.fx-film::after{background:linear-gradient(105deg,rgba(255,255,255,.14),rgba(255,255,255,.02) 40%,rgba(255,255,255,.16) 62%,rgba(255,255,255,.03))}
+.fx-tint::after{background:linear-gradient(90deg,rgba(4,6,10,.62),rgba(4,6,10,.35))}
+.fx-film b,.fx-tint b{position:absolute;top:0;bottom:0;left:100%;width:2px;background:linear-gradient(transparent,rgba(255,255,255,.9),transparent);box-shadow:0 0 14px rgba(255,255,255,.6);animation:edge 2.4s cubic-bezier(.6,.1,.2,1) .5s forwards}
+@keyframes film{to{clip-path:inset(0)}}@keyframes edge{90%{opacity:1}to{left:0;opacity:0}}
+.sig-zoom .hero-img{animation:kb 14s ease-out both;transform-origin:60% 70%}
+@keyframes kb{from{transform:scale(1.18)}to{transform:scale(1)}}
+.sig-kinetic h1 .w{display:inline-block;opacity:0;transform:translateY(.55em);animation:wordin .6s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i)*110ms + 150ms)}
+@keyframes wordin{to{opacity:1;transform:none}}
+.drawcar{display:block;width:100%;max-width:380px;height:auto;margin-top:22px}
+.drawcar path,.drawcar circle{fill:none;stroke:var(--ac);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.6s ease-in-out .4s forwards}
+.drawcar circle{animation-delay:2s;animation-duration:1s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.sig-tilt .svcs{perspective:900px}
+.sig-tilt .js .svc{opacity:0;transform:rotateX(16deg) translateY(28px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.sig-tilt .js .svc.in{opacity:1;transform:none}
+.sig-countup .stars .on{transition:width 1.4s ease-out}
+@media (prefers-reduced-motion:reduce){.fx{display:none}
+.sig-zoom .hero-img,.sig-kinetic h1 .w,.drawcar path,.drawcar circle{animation:none;opacity:1;transform:none;stroke-dashoffset:0}
+.sig-tilt .js .svc{opacity:1;transform:none;transition:none}}
+"""
+
+CAR = ('<svg class="drawcar" viewBox="0 0 400 110" aria-hidden="true">'
+       '<path pathLength="1" d="M12 88H40M86 88H286M332 88H388V72Q386 62 362 58L306 52Q276 26 244 19L156 17Q122 19 98 42L44 52Q16 58 12 74Z"/>'
+       '<path pathLength="1" d="M112 44Q130 27 156 26L200 25V46ZM212 25L240 27Q262 33 284 50L212 48Z"/>'
+       '<circle pathLength="1" cx="63" cy="88" r="20"/><circle pathLength="1" cx="309" cy="88" r="20"/></svg>')
+
+SIG_JS = {
+    "tilt": """<script>(function(){if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window))return;
+var w=document.querySelector('.svcs');w.classList.add('js');var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){
+setTimeout(function(){x.target.classList.add('in')},[].indexOf.call(w.children,x.target)%3*120);io.unobserve(x.target);}})},{threshold:.2});
+[].forEach.call(w.children,function(c){io.observe(c);});})();</script>""",
+    "countup": """<script>(function(){if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window))return;
+var io=new IntersectionObserver(function(es){es.forEach(function(x){if(!x.isIntersecting)return;io.unobserve(x.target);var el=x.target,t=parseFloat(el.dataset.n),d=(el.dataset.n.split('.')[1]||'').length,s=null;
+function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1400);el.textContent=(t*(1-Math.pow(1-p,3))).toFixed(d);if(p<1)requestAnimationFrame(f);}requestAnimationFrame(f);
+var st=el.parentNode.querySelector('.stars .on');if(st){var w=st.style.width;st.style.width='0';requestAnimationFrame(function(){requestAnimationFrame(function(){st.style.width=w;});});}});});
+[].forEach.call(document.querySelectorAll('[data-n]'),function(el){io.observe(el);});})();</script>""",
+}
+
+
+def sig_markup(sig, seed):
+    """Return (overlay html inside the hero photo, extra html under the hero buttons)."""
+    import hashlib
+    rnd = lambda i, n: int(hashlib.md5(f"{seed}{sig}{i}".encode()).hexdigest(), 16) % n
+    if sig == "beads":
+        dots = "".join(f'<i style="left:{rnd(i, 92) + 3}%;top:{rnd(i + 50, 70) + 5}%;width:{rnd(i + 99, 9) + 6}px;height:{rnd(i + 99, 9) + 6}px;animation-delay:{rnd(i + 7, 60) / 10}s"></i>' for i in range(16))
+        return f'<div class="fx fx-beads">{dots}</div>', ""
+    if sig == "foam":
+        dots = "".join(f'<i style="left:{rnd(i, 94) + 2}%;width:{rnd(i + 99, 16) + 8}px;height:{rnd(i + 99, 16) + 8}px;animation-delay:{rnd(i + 7, 60) / 10}s;animation-duration:{rnd(i + 3, 30) / 10 + 4.5}s"></i>' for i in range(14))
+        return f'<div class="fx fx-foam">{dots}</div>', ""
+    if sig in ("sweep",):
+        return '<div class="fx fx-sweep"></div>', ""
+    if sig in ("film", "tint"):
+        return f'<div class="fx fx-{sig}"><b></b></div>', ""
+    if sig == "draw":
+        return "", CAR
+    return "", ""
+
+
 STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>'
 WA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3zm4.6 12.6c-.2.6-1.2 1.1-1.7 1.2-.5 0-1 .2-3.2-.7-2.7-1.1-4.4-3.9-4.5-4.1-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.8.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>'
 PHONE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1z"/></svg>'
@@ -46,9 +170,13 @@ PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c
 CLOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
 
 
-def render(d, c, F, phone, pdisp, fonts_url, design_meta):
+def render(d, c, F, phone, pdisp, fonts_url, design_meta, design=None):
     """d = demo JSON, c = colours (designs.colors), F = font pair. Returns the full HTML page."""
     client = bool(d.get("client"))
+    design = design or {}
+    look = design.get("look", "split")
+    sig = design.get("sig", "")
+    hero_key = design.get("hero", "hero")
     name = d["name"]
     city = d["city"]
     area = d.get("area") or ""
@@ -69,19 +197,27 @@ def render(d, c, F, phone, pdisp, fonts_url, design_meta):
     # ---- hero ----
     rate_chip = ""
     if rating and reviews:
-        rate_chip = (f'<a class="chip" href="{maps}" target="_blank" rel="noopener">{STAR}<b>{e(rating)}</b>'
+        rate_chip = (f'<a class="chip" href="{maps}" target="_blank" rel="noopener">{STAR}<b data-n="{e(rating)}">{e(rating)}</b>'
                      f'<span>من {e(reviews)} تقييم على قوقل</span></a>')
+    if sig == "kinetic":
+        h1_html = " ".join(f'<span class="w" style="--i:{i}">{e(w)}</span>' for i, w in enumerate(h1.split()))
+    else:
+        h1_html = e(h1)
+    fx, extra = sig_markup(sig, d.get("slug", name))
     hero = f"""
 <section class="hero">
-  <img class="hero-img" src="{img('hero', 1000)}" alt="{alt('hero')}" fetchpriority="high">
-  <div class="hero-in">
+  <div class="hero-media">
+    <img class="hero-img" src="{img(hero_key, 1000)}" alt="{alt(hero_key)}" fetchpriority="high">
+    <div class="shade"></div>{fx}
+  </div>
+  <div class="hero-in" data-latin="{e(d.get('latin_name') or '')}">
     {rate_chip}
-    <h1>{e(h1)}</h1>
+    <h1>{h1_html}</h1>
     <p class="lead">{e(intro)}</p>
     <div class="cta">
       <a class="btn primary" href="#book">{WA}احجز موعدك</a>
       <a class="btn ghost" href="tel:+{phone}">{PHONE}اتصل</a>
-    </div>
+    </div>{extra}
   </div>
 </section>"""
 
@@ -94,27 +230,31 @@ def render(d, c, F, phone, pdisp, fonts_url, design_meta):
 
     # ---- services ----
     cards = ""
-    used = set()
+    used = {hero_key}
     for s in services:
         key = s.get("photo") or s.get("icon") or "sparkle"
         if key in used:  # never show the same photo twice
-            key = next((k for k in PHOTOS if k not in used and k != "hero"), "sparkle")
+            offered = {x.get("photo") or x.get("icon") or "sparkle" for x in services}
+            key = next((k for k in PHOTOS if k not in used and (k in NEUTRAL or k in offered)), "sparkle")
         used.add(key)
         txt = f'<p>{e(s["text"])}</p>' if s.get("text") else ""
         cards += (f'<article class="svc"><img src="{img(key, 600)}" alt="{alt(key)}" loading="lazy">'
                   f'<div class="svc-t"><h3>{e(s["title"])}</h3>{txt}</div></article>')
+    T = TITLES[look]
     services_html = f"""
 <section id="services" class="sec">
-  <h2>خدماتنا</h2>
+  <h2>{T['services']}</h2>
   <div class="svcs">{cards}</div>
 </section>"""
 
     # ---- gallery ----
-    gkeys = [k for k in PHOTOS if k not in used and k != "hero"][:6]
+    # only neutral car photos and photos of services this shop offers (never e.g. a PPF photo for a car wash)
+    offered = {s.get("photo") or s.get("icon") or "sparkle" for s in services}
+    gkeys = [k for k in PHOTOS if k not in used and (k in NEUTRAL or k in offered)][:6]
     gallery = "".join(f'<img src="{img(k, 600)}" alt="{alt(k)}" loading="lazy">' for k in gkeys)
     gallery_html = f"""
 <section id="work" class="sec">
-  <h2>من أعمالنا</h2>
+  <h2>{T['work']}</h2>
   <div class="strip">{gallery}</div>
   {photos_note}
 </section>"""
@@ -140,13 +280,13 @@ def render(d, c, F, phone, pdisp, fonts_url, design_meta):
         head = ""
         if rating and reviews:
             pct = max(0, min(100, float(rating) / 5 * 100))
-            head = (f'<div class="score"><b>{e(rating)}</b><div><div class="stars" aria-label="{e(rating)} من 5">'
+            head = (f'<div class="score"><b data-n="{e(rating)}">{e(rating)}</b><div><div class="stars" aria-label="{e(rating)} من 5">'
                     f'<div class="on" style="width:{pct:.0f}%">{STAR * 5}</div><div class="off">{STAR * 5}</div></div>'
                     f'<span>{e(reviews)} تقييم على خرائط قوقل</span></div></div>')
         qs = "".join(
             f'<blockquote><p>«{e(r["text"])}»</p>'
             f'<cite>{e(r.get("by") or "من تقييمات قوقل")}</cite></blockquote>' for r in rev_list)
-        reviews_html = f'<section id="reviews" class="sec"><h2>وش يقولون عملاؤنا</h2>{head}{qs}</section>'
+        reviews_html = f'<section id="reviews" class="sec"><h2>{T["reviews"]}</h2>{head}{qs}</section>'
 
     # ---- booking ----
     options = "".join(f"<option>{e(n)}</option>" for n in svc_names)
@@ -188,6 +328,10 @@ def render(d, c, F, phone, pdisp, fonts_url, design_meta):
     acc, at = c["accent"], c["accent_text"]
     latin_sub = e(d.get("latin_name") or "")
 
+    parts = dict(services=services_html, gallery=gallery_html, middle=middle, reviews=reviews_html)
+    body = "\n".join(parts[k] for k in ORDER[look])
+    page_class = f"look-{look}" + (f" sig-{sig}" if sig else "")
+
     css = f"""
 :root{{--bg:{c['bg']};--s1:{c['surface']};--s2:{c['surface2']};--tx:{c['text']};--tx2:{c['text2']};--ln:{c['line']};
 --ac:{acc};--at:{at};--d:"{F['display']}",system-ui,sans-serif;--t:"{F['text']}",system-ui,sans-serif;--dw:{F['dw']}}}
@@ -203,7 +347,9 @@ padding:12px 16px;background:var(--bg);background:color-mix(in srgb,var(--bg) 88
 .call{{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--s2);border:1px solid var(--ln);color:var(--ac)}}
 .hero{{position:relative;display:flex;flex-direction:column}}
 .hero-img{{width:100%;height:46vh;min-height:260px;max-height:520px;object-fit:cover;object-position:50% 70%}}
-.hero::before{{content:"";position:absolute;inset:0 0 auto 0;height:46vh;min-height:260px;max-height:520px;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,var(--bg) 100%);pointer-events:none}}
+.hero-media{{position:relative;overflow:hidden}}
+.shade{{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,var(--bg) 100%);pointer-events:none}}
+.fx{{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}}
 .hero-in{{position:relative;z-index:2;padding:0 16px 24px;margin-top:-56px;width:100%;max-width:640px}}
 .chip{{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.55);
 border:1px solid rgba(255,255,255,.15);font-size:.85rem;text-decoration:none;color:#fff;margin-bottom:14px}}
@@ -262,7 +408,7 @@ background:var(--bg);background:color-mix(in srgb,var(--bg) 92%,transparent);bac
 @media (min-width:760px){{.svcs{{grid-template-columns:repeat(3,1fr)}}.strip img{{flex-basis:30%}}.hero-in{{padding:48px 32px}}
 .dock{{display:none}}body{{padding-bottom:0}}}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}.dock{{transition:none}}}}
-"""
+""" + LOOK_CSS + SIG_CSS
 
     return f"""<!doctype html>
 <html lang="ar" dir="rtl">
@@ -279,7 +425,7 @@ background:var(--bg);background:color-mix(in srgb,var(--bg) 92%,transparent);bac
 <link href="{fonts_url}" rel="stylesheet">
 <style>{css}</style>
 </head>
-<body>
+<body class="{page_class}">
 {demo_line}
 <header>
   <div class="logo">{e(name)}{f'<small>{latin_sub}</small>' if latin_sub else ''}</div>
@@ -288,10 +434,7 @@ background:var(--bg);background:color-mix(in srgb,var(--bg) 92%,transparent);bac
 <main>
 {hero}
 {facts_html}
-{services_html}
-{gallery_html}
-{middle}
-{reviews_html}
+{body}
 {book_html}
 {loc_html}
 </main>
@@ -312,6 +455,7 @@ document.getElementById('form').addEventListener('submit',function(ev){{ev.preve
   var t='السلام عليكم، أبغى أحجز موعد لخدمة '+v('svc')+(v('car')?' لسيارة '+v('car'):'')+'، الوقت المناسب: '+v('tm')+(v('nm')?'. الاسم: '+v('nm'):'')+'.';
   window.open('{wa}?text='+encodeURIComponent(t),'_blank');}});
 </script>
+{SIG_JS.get(sig, "")}
 </body>
 </html>
 """
