@@ -30,3 +30,14 @@ says in the footer that it is not their official site, and carries `noindex`.
   only after the deposit, with `"client": true` (no label, no noindex) in `clients/<slug>/`.
 - Use the customer's logo or photos only after they send them.
 - Keep free work per prospect to about 15 minutes; anything more waits for the deposit.
+
+## Default design: "pro" (2026-11-01)
+
+The owner rejected the old text-only designs. Every new demo now uses the `pro` layout
+(`tools/pro_template.py`): dark, photo-led, phone-first. It uses free Unsplash photos
+labelled "صور توضيحية" (no shop photos until they send them), one small demo line, real
+Google rating and review only, a "3 steps" strip instead of empty packages (packages only
+show with real prices), a WhatsApp booking form and a location card. Choose the colour with
+`"design": {"palette": "obsidian-gold"}` (dark palettes only) and add `"latin_name"` for the
+English line under the name. Before any demo link goes to a customer, check it at 390 px and
+get the owner's OK on the first demos built with this design.

@@ -26,6 +26,7 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 import designs as D  # noqa: E402
 import templates as T  # noqa: E402
+import pro_template as P  # noqa: E402
 
 ICONS = {
     "shield": '<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/>',
@@ -69,6 +70,9 @@ def build(d, design):
     fonts_url = f"https://fonts.googleapis.com/css2?{F['css']}&family=Montserrat:wght@500;700&display=swap"
     lat, lng = d.get("lat"), d.get("lng")
     q = f"{lat},{lng}" if lat and lng else e(d.get("maps_query") or (name + " " + city))
+
+    if L == "pro":
+        return P.render(d, c, F, phone, pdisp, fonts_url, design_meta)
 
     if L != "classic":
         packs = d.get("packs") or [

@@ -13,9 +13,11 @@ font pair, shape and palette, so two shops never get the same site.
 """
 import glob, hashlib, os, re
 
-LAYOUTS = ["classic", "showroom", "garage", "clean", "magazine", "blocks", "local"]
+LAYOUTS = ["pro", "classic", "showroom", "garage", "clean", "magazine", "blocks", "local"]
+# 2026-11-01: owner rejected the old text-only designs; every new demo uses "pro" unless a layout is forced
+DEFAULT_LAYOUT = "pro"
 # layouts that only suit one theme (the rest work in light and dark)
-LAYOUT_THEME = {"showroom": "dark", "magazine": "light"}
+LAYOUT_THEME = {"showroom": "dark", "magazine": "light", "pro": "dark"}
 
 FONTS = {
     "lalezar": dict(display="Lalezar", dw=400, text="IBM Plex Sans Arabic",
@@ -94,7 +96,7 @@ def pick_design(root, slug, theme=None, wanted=None):
     others = [d for s, d in used if s != slug]
     out = {}
     lays = [l for l in LAYOUTS if not theme or LAYOUT_THEME.get(l, theme) == theme]
-    out["layout"] = wanted.get("layout") or _least_used(lays, [d.get("layout") for d in others], slug + "L")
+    out["layout"] = wanted.get("layout") or DEFAULT_LAYOUT
     theme = theme or LAYOUT_THEME.get(out["layout"])
     out["fonts"] = wanted.get("fonts") or _least_used(list(FONTS), [d.get("fonts") for d in others], slug + "F")
     out["shape"] = wanted.get("shape") or _least_used(list(SHAPES), [d.get("shape") for d in others], slug + "S")

@@ -36,7 +36,11 @@
   ],
   "review": "الشغل ممتاز والقص ماشاء الله تبارك الله، وتعامل الأخ عمار جداً محترم",
   "design": {
-    "layout": "showroom"
+    "layout": "pro",
+    "fonts": "alexandria",
+    "palette": "obsidian-gold",
+    "shape": "soft"
   },
-  "theme": "dark"
+  "theme": "dark",
+  "latin_name": "HIGH CLASS CAR CARE"
 }
