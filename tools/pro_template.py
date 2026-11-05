@@ -258,6 +258,8 @@ def render(d, c, F, phone, pdisp, fonts_url, design_meta, design=None):
   <div class="strip">{gallery}</div>
   {photos_note}
 </section>"""
+    if not gallery:
+        gallery_html = ""
 
     # ---- packages only with real prices, otherwise how-it-works ----
     packs = [p for p in (d.get("packs") or []) if p.get("price")]
