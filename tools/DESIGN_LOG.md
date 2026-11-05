@@ -13,4 +13,5 @@ Written by make_demo.py on every build. Each site's design, so no two look alike
 | highclass | pro | - | - | - | alexandria | soft | obsidian-gold |
 | rifex | classic | - | - | - | lalezar | round | pearl-red |
 | smcare | pro | - | - | - | changa | soft | obsidian-gold |
+| takhasus | pro | editorial | draw | extra1 | reem | sharp | midnight-sky |
 | vantage | classic | - | - | - | lalezar | round | pearl-red |
